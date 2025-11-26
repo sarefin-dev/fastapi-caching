@@ -1,3 +1,5 @@
+# This is still in development - please do not use this as reference"
+
 # 🚀 Comprehensive Guide to Caching & Redis — Use Cases, Patterns & Optimizations
 
 A complete, production-grade reference for **caching strategies**, **Redis patterns**, **distributed cache design**, and **performance optimizations**. Perfect for backend engineers, system designers, and architects. 
