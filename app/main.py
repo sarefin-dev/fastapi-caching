@@ -1,8 +1,10 @@
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, Request, status, Depends
 from fastapi.responses import JSONResponse
+
+from app.core.settings.basic_settings import BasicSettingsDep
 
 import logging
 
@@ -48,7 +50,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 
 @app.get("/", tags=["Root"])
-async def root(request: Request):
+async def root(request: Request, settings: BasicSettingsDep):
     """
     Root endpoint - API information and navigation.
 
@@ -57,7 +59,7 @@ async def root(request: Request):
     """
     base_url = str(request.base_url).rstrip("/")
     return {
-        "message": app.title,
+        "message": f"{app.title}:{settings.app_name}",
         "version": app.version,
         "status": "operational",
         "timestamp": datetime.now(timezone.utc).isoformat(),
