@@ -23,4 +23,4 @@ def get_session():
 
 
 # Use this dependency whenever a function needs access to the Databse Session object.
-SessonDep = Annotated[Session, Depends(get_session)]
+SessionDep = Annotated[Session, Depends(get_session)]

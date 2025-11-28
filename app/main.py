@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 
 from app.core.settings.config import BasicSettingsDep
 from app.db.init_db import create_db_and_tables
+from app.routes import hero
 
 import logging
 
@@ -27,6 +28,8 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
+
+app.include_router(hero.router)
 
 
 @app.exception_handler(Exception)
