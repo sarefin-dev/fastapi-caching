@@ -6,6 +6,7 @@ from app.schemas.hero import HeroPublic
 
 router = APIRouter(tags=["Hero"], prefix="/heros")
 
+
 @router.get("/{hero_id}", response_model=HeroPublic)
 def get_hero(hero_id, session: SessionDep):
     """
@@ -23,6 +24,8 @@ def get_hero(hero_id, session: SessionDep):
     """
     hero = HeroRepository.read_hero(session, hero_id)
     if not hero:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Cannot find hero with id {hero_id}")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Cannot find hero with id {hero_id}",
+        )
     return hero
-
