@@ -7,15 +7,19 @@ from typing_extensions import Annotated
 
 class BasicSettings(BaseSettings):
     """
-    Defines the structure for application settings. 
+    Defines the structure for application settings.
     Settings are loaded from environment variables or a .env file.
     """
 
-    # The application's name. It uses a default value if not found 
+    # The application's name. It uses a default value if not found
     # in the environment or .env file. It is being used for testing whether the app is getting loaded or not.
     app_name: str = "In case env file is missing"
 
     database_url: str = "sqlite:///database.db"
+
+    basic_cache_capacity: int = 1000
+    basic_cache_ttl_seconds: int = 3600  # seconds
+    basic_ccache_thread_safe: bool = True
 
     model_config: SettingsConfigDict = SettingsConfigDict(env_file=".env")
 
@@ -24,13 +28,13 @@ class BasicSettings(BaseSettings):
 def get_basic_settings():
     """
     Loads and caches the BasicSettings instance.
-    
+
     The @lru_cache decorator ensures that:
     1. The function is called only once per process.
-    2. Subsequent calls return the cached result immediately, 
+    2. Subsequent calls return the cached result immediately,
        avoiding file I/O and object creation overhead.
     """
-    #Print statement to prove the function is executed only on the first call
+    # Print statement to prove the function is executed only on the first call
     print("I should not be printed twice")
     return BasicSettings()
 
