@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 
 from app.db.session import SessionDep
-from app.repositories.hero_repository import HeroRepository
+from app.services.hero_service import HeroService
 from app.schemas.hero import HeroPublic
 
 router = APIRouter(tags=["Hero"], prefix="/heros")
@@ -22,7 +22,7 @@ def get_hero(hero_id, session: SessionDep):
     Returns:
         HeroPublic: The found hero data conforming to the public schema.
     """
-    hero = HeroRepository.read_hero(session, hero_id)
+    hero = HeroService.read_hero(session, hero_id)
     if not hero:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
