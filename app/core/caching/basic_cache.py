@@ -3,7 +3,7 @@ from typing_extensions import Annotated
 
 from app.core.caching.cache_protocols import CacheProtocol
 from app.core.settings.config import BasicSettings, get_basic_settings
-from app.lib.basic_cache import BasicCache
+from app.cachelib.basic_cache import BasicCache
 
 settings: BasicSettings = get_basic_settings()
 
