@@ -5,6 +5,7 @@ from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 
 from app.core.settings.config import BasicSettingsDep
+from app.db.init_db import create_db_and_tables
 
 import logging
 
@@ -15,6 +16,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info(f"{app.title} v{app.version} starting up")
+    create_db_and_tables()
     yield
     logger.info(f"{app.title} v{app.version} is shutting down")
 
