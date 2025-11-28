@@ -1,10 +1,10 @@
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 
-from fastapi import FastAPI, Request, status, Depends
+from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 
-from app.core.settings.basic_settings import BasicSettingsDep
+from app.core.settings.config import BasicSettingsDep
 
 import logging
 

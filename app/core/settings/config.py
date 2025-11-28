@@ -15,6 +15,8 @@ class BasicSettings(BaseSettings):
     # in the environment or .env file. It is being used for testing whether the app is getting loaded or not.
     app_name: str = "In case env file is missing"
 
+    database_url: str = "sqlite:///database.db"
+
     model_config: SettingsConfigDict = SettingsConfigDict(env_file=".env")
 
 
