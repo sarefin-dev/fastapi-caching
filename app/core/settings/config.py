@@ -2,7 +2,7 @@ from functools import lru_cache
 
 from fastapi import Depends
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing_extensions import Annotated
+from typing_extensions import Annotated, Literal
 
 
 class BasicSettings(BaseSettings):
@@ -17,9 +17,10 @@ class BasicSettings(BaseSettings):
 
     database_url: str = "sqlite:///database.db"
 
-    basic_cache_capacity: int = 1000
-    basic_cache_ttl_seconds: int = 3600  # seconds
-    basic_ccache_thread_safe: bool = True
+    cache_capacity: int = 1000
+    cache_ttl_seconds: int = 3600  # seconds
+    cache_thread_safe: bool = True
+    cache_engine: Literal["BASIC", "ORDER_DICT"] = "BASIC"
 
     model_config: SettingsConfigDict = SettingsConfigDict(env_file=".env")
 
