@@ -1,3 +1,4 @@
+import timeit
 from fastapi import APIRouter, HTTPException, status
 
 from app.core.dependencies import HeroServiceDep

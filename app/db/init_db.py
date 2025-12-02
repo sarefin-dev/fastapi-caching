@@ -22,8 +22,9 @@ def create_db_and_tables():
         logger.info("Data already exists in database")
     else:
         logger.info("Seeding database with initial data")
-        test_hero = Hero(name="First Hero", age=10, secret_name="secret")
-        session.add(test_hero)
-        session.commit()
+        for i in range(1, 1000):
+            test_hero = Hero(name=f"Hero - {i}", age=10 * i, secret_name=f"secret-{i}")
+            session.add(test_hero)
+            session.commit()
 
     session.close()
