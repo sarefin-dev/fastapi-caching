@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 
+from app.routes import basic_computation
 from app.core.settings.config import ConfigDep
 
 logging.basicConfig(level=logging.INFO)
@@ -24,6 +25,8 @@ app = FastAPI(
     version="1.0.0",
     description="We will explore various use cases of cachetool here",
 )
+
+app.include_router(basic_computation.router)
 
 
 @app.exception_handler(Exception)
