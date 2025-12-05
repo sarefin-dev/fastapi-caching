@@ -4,7 +4,17 @@ from fastapi import FastAPI, status
 from fastapi.requests import Request
 from fastapi.responses import JSONResponse
 
-app = FastAPI(title="L1 & L2 cache example", version="1.0.0")
+from app.core.config import ConfigDep
+from contextlib import asynccontextmanager
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Starting app...")
+    yield
+    print("App is closing")
+
+app = FastAPI(title="L1 & L2 cache example", version="1.0.0", lifespan=lifespan)
 
 
 @app.exception_handler(Exception)
@@ -29,10 +39,10 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 
 @app.get("/", tags=["Root"])
-async def root(request: Request):
+async def root(request: Request, config: ConfigDep):
     base_url = str(request.base_url).rstrip("/")
     return {
-        "message": f"{app.title}",
+        "message": f"APP Title: {app.title} App Name: {config.app_name}",
         "version": app.version,
         "status": "operational",
         "timestamp": datetime.now(timezone.utc).isoformat(),
