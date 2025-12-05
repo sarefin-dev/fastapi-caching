@@ -1,8 +1,8 @@
 import logging
 
-from threading import RLock
-
-from cachetools import TTLCache, cached
+from app.cache.cache_client import get_cache_client, get_lock
+from app.cache.utils import list_key_generator
+from cachetools import cached
 from fastapi import APIRouter, Query
 
 logging.basicConfig(level=logging.INFO)
@@ -10,21 +10,10 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["Basic Computation"], prefix="/compute")
 
-# CHANGE: Increased TTL to 60 seconds (from 5 or 30 previously)
-# Cache size set to 30 max items, with a Time-To-Live (TTL) of 60 seconds.
-cache = TTLCache(maxsize=30, ttl=60)
+# CHANGE: Refactoring for generic cache client.
+cache = get_cache_client()
 
-lock = RLock()
-
-# FIX: Sort the list before generating the key
-def list_key_generator(x: list[int]) -> str:
-    """
-    Generates an order-independent, hashable key for the cache.
-    1. Sorts the list to ensure [1, 2, 3] and [3, 2, 1] produce the same key.
-    2. Joins the elements into a string.
-    """
-    # Key change: Sort the list 'x' before converting it to strings and joining.
-    return "-".join(map(str, sorted(x)))
+lock = get_lock()
 
 
 @cached(cache, lock=lock, key=list_key_generator)
