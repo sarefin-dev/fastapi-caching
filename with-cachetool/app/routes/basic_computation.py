@@ -8,7 +8,9 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["Basic Computation"], prefix="/compute")
 
-cache = TTLCache(maxsize=30, ttl=5)
+# CHANGE: Increased TTL to 60 seconds (from 5 or 30 previously)
+# Cache size set to 30 max items, with a Time-To-Live (TTL) of 60 seconds.
+cache = TTLCache(maxsize=30, ttl=60)
 
 
 # FIX: Sort the list before generating the key
@@ -24,11 +26,40 @@ def list_key_generator(x: list[int]) -> str:
 
 @cached(cache, key=list_key_generator)
 def _compute_sum(x: list[int]) -> int:
+    """Computes the sum of a list of integers. Caching is order-independent."""
     key = list_key_generator(x)
     logger.info(f"Should be called one time for key: {key}")
     return sum(x)
 
 
+# NEW FEATURE: Recursive factorial computation with default caching
+# The default key generator for @cached uses the function arguments (n) directly.
+@cached(cache)
+def _compute_factorial(n: int) -> int:
+    """
+    Computes the factorial of n (n!).
+    The TTLCache ensures the result is saved for 'n' for 60 seconds.
+    """
+    # This print statement helps verify cache hits/misses
+    print(
+        f"Computing factorial for {n} - it should not be called within 1 min if number <= {n} is given"
+    )
+
+    # Base case for recursion
+    if n <= 1:
+        return 1
+
+    # Recursive step: n * (n-1)!
+    return n * _compute_factorial(n - 1)
+
+
 @router.get("/sum")
 async def get_sum(q: list[int] = Query()):
+    """Endpoint for computing the sum of integers from a query list (q=1&q=2...)."""
     return _compute_sum(q)
+
+
+@router.get("/factorial/{n}")
+async def get_factorial(n: int) -> int:
+    """Endpoint for computing the factorial of an integer 'n'."""
+    return _compute_factorial(n)
