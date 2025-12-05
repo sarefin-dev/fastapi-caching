@@ -24,6 +24,9 @@ app = FastAPI(
     lifespan=lifespan,
     version="1.0.0",
     description="We will explore various use cases of cachetool here",
+    swagger_ui_parameters={
+        "displayRequestDuration": True
+    }
 )
 
 app.include_router(basic_computation.router)

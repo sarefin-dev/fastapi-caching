@@ -1,5 +1,7 @@
 import logging
 
+from threading import RLock
+
 from cachetools import TTLCache, cached
 from fastapi import APIRouter, Query
 
@@ -12,6 +14,7 @@ router = APIRouter(tags=["Basic Computation"], prefix="/compute")
 # Cache size set to 30 max items, with a Time-To-Live (TTL) of 60 seconds.
 cache = TTLCache(maxsize=30, ttl=60)
 
+lock = RLock()
 
 # FIX: Sort the list before generating the key
 def list_key_generator(x: list[int]) -> str:
@@ -24,7 +27,7 @@ def list_key_generator(x: list[int]) -> str:
     return "-".join(map(str, sorted(x)))
 
 
-@cached(cache, key=list_key_generator)
+@cached(cache, lock=lock, key=list_key_generator)
 def _compute_sum(x: list[int]) -> int:
     """Computes the sum of a list of integers. Caching is order-independent."""
     key = list_key_generator(x)
@@ -33,7 +36,7 @@ def _compute_sum(x: list[int]) -> int:
 
 
 # NEW FEATURE: Recursive fibonacci computation with default caching
-@cached(cache)
+@cached(cache, lock=lock)
 def _compute_fibonacci(n) -> int:
     """
     Docstring for _compute_fibonacci
@@ -56,7 +59,7 @@ def _compute_fibonacci(n) -> int:
 
 # NEW FEATURE: Recursive factorial computation with default caching
 # The default key generator for @cached uses the function arguments (n) directly.
-@cached(cache)
+@cached(cache, lock=lock)
 def _compute_factorial(n: int) -> int:
     """
     Computes the factorial of n (n!).
