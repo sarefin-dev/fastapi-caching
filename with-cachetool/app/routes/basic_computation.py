@@ -91,4 +91,3 @@ async def get_factorial(n: int) -> int:
 async def get_fibonacci(n: int) -> int:
     """Endpoint for computing the factorial of an integer 'n'."""
     return _compute_fibonacci(n)
-
