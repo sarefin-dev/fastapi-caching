@@ -4,9 +4,9 @@ from cachetools import cached
 
 from app.cache.cache_client import get_cache_client, get_lock
 from app.cache.utils import list_key_generator
+from app.core.logging_config import APPLICATION_LOGGER_NAME
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(APPLICATION_LOGGER_NAME)
 
 cache = get_cache_client()
 
@@ -37,7 +37,7 @@ def _compute_fibonacci(n) -> int:
         return 1
     else:
         # This print statement helps verify cache hits/misses
-        print(
+        logger.info(
             f"Computing fibonacci for {n} - it should not be called within 1 min if number <= {n} is given"
         )
         return _compute_fibonacci(n - 2) + _compute_factorial(n - 1)
@@ -52,7 +52,7 @@ def _compute_factorial(n: int) -> int:
     The TTLCache ensures the result is saved for 'n' for 60 seconds.
     """
     # This print statement helps verify cache hits/misses
-    print(
+    logger.info(
         f"Computing factorial for {n} - it should not be called within 1 min if number <= {n} is given"
     )
 

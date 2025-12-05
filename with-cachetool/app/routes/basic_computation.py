@@ -1,14 +1,9 @@
-import logging
-
 from app.services.computer_service import (
     _compute_factorial,
     _compute_fibonacci,
     _compute_sum,
 )
 from fastapi import APIRouter, Query
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["Basic Computation"], prefix="/compute")
 

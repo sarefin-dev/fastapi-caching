@@ -8,12 +8,15 @@ from fastapi.responses import JSONResponse
 from app.routes import basic_computation
 from app.core.settings.config import ConfigDep
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from app.core.logging_config import setup_logger, APPLICATION_LOGGER_NAME
+
+logger = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    setup_logger()
+    logger = logging.getLogger(APPLICATION_LOGGER_NAME)
     logger.info(f"Starting {app.title}")
     yield
     logger.info(f"Shutting down {app.title}")
@@ -24,9 +27,7 @@ app = FastAPI(
     lifespan=lifespan,
     version="1.0.0",
     description="We will explore various use cases of cachetool here",
-    swagger_ui_parameters={
-        "displayRequestDuration": True
-    }
+    swagger_ui_parameters={"displayRequestDuration": True},
 )
 
 app.include_router(basic_computation.router)
@@ -62,7 +63,7 @@ async def root(request: Request, settings: ConfigDep):
     Provides metadata about the API including version, status,
     and links to documentation and available endpoints.
     """
-    #print(settings)
+    # print(settings)
     base_url = str(request.base_url).rstrip("/")
     return {
         "message": f"{app.title}:{settings.app_name}",
