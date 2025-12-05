@@ -1,18 +1,23 @@
+from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 
 from fastapi import FastAPI, status
 from fastapi.requests import Request
 from fastapi.responses import JSONResponse
+from loguru import logger
 
-from app.core.config import ConfigDep
-from contextlib import asynccontextmanager
+from app.core.config import ConfigDep, get_config
+from app.core.logging_config import setup_logging
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("Starting app...")
+    await setup_logging()
+    settings = await get_config()
+    logger.info(f"Starting App {settings.app_name}")
     yield
     print("App is closing")
+
 
 app = FastAPI(title="L1 & L2 cache example", version="1.0.0", lifespan=lifespan)
 
@@ -40,6 +45,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 @app.get("/", tags=["Root"])
 async def root(request: Request, config: ConfigDep):
+    logger.info("Root function called.")
     base_url = str(request.base_url).rstrip("/")
     return {
         "message": f"APP Title: {app.title} App Name: {config.app_name}",
