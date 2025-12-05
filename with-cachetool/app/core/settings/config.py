@@ -1,5 +1,3 @@
-import asyncio
-#from functools import lru_cache
 from async_lru import alru_cache
 from fastapi import Depends
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -8,6 +6,7 @@ from typing_extensions import Annotated
 
 class AppSettings(BaseSettings):
     app_name: str = "My App"
+    logger_name: str = "Fallback Logger Name"
 
     model_config = SettingsConfigDict(env_file=".env")
 

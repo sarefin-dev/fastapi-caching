@@ -4,9 +4,9 @@ from cachetools import cached
 
 from app.cache.cache_client import get_cache_client, get_lock
 from app.cache.utils import list_key_generator
-from app.core.logging_config import APPLICATION_LOGGER_NAME
+from app.core.settings.config import AppSettings
 
-logger = logging.getLogger(APPLICATION_LOGGER_NAME)
+logger = logging.getLogger(AppSettings().logger_name)
 
 cache = get_cache_client()
 

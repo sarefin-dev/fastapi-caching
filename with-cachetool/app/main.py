@@ -1,22 +1,22 @@
 import logging
-from datetime import datetime, timezone
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 
+from app.core.logging_config import setup_logger
+from app.core.settings.config import ConfigDep, get_app_config
 from app.routes import basic_computation
-from app.core.settings.config import ConfigDep
-
-from app.core.logging_config import setup_logger, APPLICATION_LOGGER_NAME
 
 logger = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    setup_logger()
-    logger = logging.getLogger(APPLICATION_LOGGER_NAME)
+    app_settings = await get_app_config()
+    await setup_logger(app_settings)
+    logger = logging.getLogger(app_settings.logger_name)
     logger.info(f"Starting {app.title}")
     yield
     logger.info(f"Shutting down {app.title}")
@@ -63,7 +63,7 @@ async def root(request: Request, settings: ConfigDep):
     Provides metadata about the API including version, status,
     and links to documentation and available endpoints.
     """
-    # print(settings)
+
     base_url = str(request.base_url).rstrip("/")
     return {
         "message": f"{app.title}:{settings.app_name}",
