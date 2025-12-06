@@ -4,3 +4,4 @@ python-dotenv
 sqlmodel
 async-lru
 cachetools
+loguru
